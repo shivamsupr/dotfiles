@@ -161,6 +161,7 @@ declare -a FILES_TO_SYMLINK=(
   'shell/zshrc'
   'shell/vimrc'
   'shell/tmux.conf'
+  'shell/p10k.zsh'
   # 'shell/ackrc'
   # 'shell/curlrc'
   # 'shell/gemrc'
