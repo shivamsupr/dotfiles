@@ -1,8 +1,8 @@
 [core]
   editor = "nvim"
 [user]
-	email = shetty.raxx555@gmail.com
-	name = Rakshan Shetty
+	email = shivamsupr@gmail.com
+	name = Shivam Rastogi
 
 [alias]
     # Pull

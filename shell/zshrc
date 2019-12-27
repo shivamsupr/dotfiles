@@ -35,7 +35,7 @@ source $ZSH_CUSTOM/plugins/zshhighlight.sh
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -60,17 +60,17 @@ source $ZSH_CUSTOM/plugins/zshhighlight.sh
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-extras git-open zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(git pip python brew osx zsh-syntax-highlighting zsh-autosuggestions yarn-autocompletions)
 
 # source $ohmyzsh/oh-my-zsh.sh
 source $ZSH/oh-my-zsh.sh
 
-
 # User configuration
 # export EDITOR="/usr/bin/vim"
-export ANDROID_HOME=${HOME}/Android/Sdk
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.1.jdk/Contents/Home
+export ANDROID_HOME=${HOME}/Library/Android/sdk
 export GRADLE_HOME="/usr/share/gradle"
-export GOPATH=${HOME}/projects/go
+export GOPATH=${HOME}/workspaces/go
 
 # If directory exists they will be added to the path env variable
 declare -a dir_path
@@ -79,11 +79,17 @@ dir_path=(
   "$HOME/.local/bin"
   "/usr/local/go/bin"
   "$GOPATH/bin"
+  "$HOME/.rbenv/bin"
+  "$HOME/.rbenv/plugins/ruby-build/bin"
+  "$JAVA_HOME/bin"
+  "$ANDROID_HOME/build-tools"
   "$ANDROID_HOME/tools"
   "$ANDROID_HOME/tools/bin"
+  "$HOME/Bundletool"
   "$ANDROID_HOME/emulator"
   "$ANDROID_HOME/platform-tools"
   "$GRADLE_HOME/bin"
+  "/Applications/CMake.app/Contents/bin"
 )
 
 for dir in ${(k)dir_path[@]}
@@ -96,8 +102,9 @@ done
 unset dir_path
 
 export PATH
+eval "$(rbenv init -)"
 
-source /usr/share/autojump/autojump.sh
+source /usr/local/share/autojump/autojump.zsh
 source $HOME/.nvm/nvm.sh
 
 # fzf config
@@ -144,6 +151,17 @@ unset file;
 # You may need to manually set your language environment
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /Users/shivamr/.nvm/versions/node/v10.13.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/shivamr/.nvm/versions/node/v10.13.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /Users/shivamr/.nvm/versions/node/v10.13.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/shivamr/.nvm/versions/node/v10.13.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+# tabtab source for slss package
+# uninstall by removing these lines or running `tabtab uninstall slss`
+[[ -f /Users/shivamr/.nvm/versions/node/v10.13.0/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/shivamr/.nvm/versions/node/v10.13.0/lib/node_modules/serverless/node_modules/tabtab/.completions/slss.zsh
+
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then

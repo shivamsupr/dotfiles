@@ -238,7 +238,7 @@ main() {
 
 install_zsh () {
   # Test to see if zshell is installed.  If it is:
-  if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
+  if [ -f /bin/zsh -o -f /usr/local/bin/zsh ]; then
     # Install Oh My Zsh if it isn't already present
     if [[ ! -d ~/.oh-my-zsh ]]; then
       cd ~ && git clone https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh
@@ -292,12 +292,6 @@ if [ ! -d ~/.fzf ]; then
   git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
   ~/.fzf/install
 fi
-
-
-###############################################################################
-# Caps to Esc                                                                 #
-###############################################################################
-setxkbmap -option caps:escape
 
 ###############################################################################
 # Vim                                                                         #
