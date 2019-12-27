@@ -21,7 +21,6 @@ packages=(
   jq
   kafka
   mkcert
-  mongodb
   neovim
   nginx
   openssl
