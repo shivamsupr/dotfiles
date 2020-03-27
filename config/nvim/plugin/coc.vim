@@ -7,7 +7,6 @@
         \ 'coc-git',
         \ 'coc-eslint',
         \ 'coc-tslint-plugin',
-        \ 'coc-pairs',
         \ 'coc-sh',
         \ 'coc-vimlsp',
         \ 'coc-emmet',
@@ -22,6 +21,12 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ coc#refresh()
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
@@ -56,7 +61,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gh <Plug>(coc-doHover)
+nmap <silent> gh :call CocAction('doHover')<cr>
 
 " Find symbol of current document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>

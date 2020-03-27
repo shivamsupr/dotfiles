@@ -4,6 +4,8 @@ call plug#begin('~/.config/nvim/plugged')
 " colorscheme
 Plug 'cocopon/iceberg.vim'
 Plug 'arcticicestudio/nord-vim'
+Plug 'logico/typewriter-vim'
+Plug 'sainnhe/edge'
 
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -12,6 +14,13 @@ Plug 'junegunn/vim-peekaboo'
 " File search
 Plug '~/.fzf/'
 Plug 'junegunn/fzf.vim'
+
+" Edit
+Plug 'tpope/vim-repeat'
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'metakirby5/codi.vim'
+Plug 'wellle/targets.vim'
 
 " autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -31,6 +40,7 @@ Plug 'shumphrey/fugitive-gitlab.vim' " :Gbrowse for gitlab
 Plug 'tpope/vim-surround'
 Plug 'airblade/vim-gitgutter'
 Plug 'easymotion/vim-easymotion'
+Plug 'jiangmiao/auto-pairs'
 " Plug 'dense-analysis/ale'  Replaced with coc-eslint
 " Plug 'raimondi/delimitmate'
 

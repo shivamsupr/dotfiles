@@ -8,6 +8,7 @@ sudo -v
 # sudo apt-get update
 
 # sudo apt-get -y upgrade
+sudo apt-get -qq install jq > /dev/null 2>&1
 
 
 apt_keys=()
@@ -47,26 +48,21 @@ apt_packages+=(
   autojump
   imagemagick
   vim
-  vim-nox
   vsftpd
   guake
   xclip
   tmux
   transmission
+  dconf-editor
 )
-
-apt_keys+=(https://download.sublimetext.com/sublimehq-pub.gpg )
-apt_source_files+=(sublime-text)
-apt_source_texts+=("deb https://download.sublimetext.com/ apt/stable/")
-apt_packages+=(sublime-text)
 
 # https://github.com/oguzhaninan/Stacer
 add_ppa ppa:oguzhaninan/stacer
 apt_packages+=(stacer)
 
 # https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
-# add_ppa ppa:papirus/papirus
-# apt_packages+=(papirus-icon-theme)
+add_ppa ppa:papirus/papirus
+apt_packages+=(papirus-icon-theme)
 
 # https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04
 # add_ppa ppa:webupd8team/java
@@ -93,12 +89,35 @@ apt_packages+=(yarn)
 
 
 # https://github.com/sharkdp/bat
-deb_installed+=(Bat)
-deb_sources+=(https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb)
+deb_installed+=(bat)
+batversion="$(curl -s "https://api.github.com/repos/sharkdp/bat/releases/latest" | jq -r .tag_name | sed 's/v//')" 
+deb_sources+=('https://github.com/sharkdp/bat/releases/latest/download/bat_'$batversion'_amd64.deb')
 
 # https://github.com/sharkdp/fd
 deb_installed+=(fd)
-deb_sources+=(https://github.com/sharkdp/fd/releases/download/v7.4.0/fd_7.4.0_amd64.deb)
+fdversion="$(curl -s "https://api.github.com/repos/sharkdp/fd/releases/latest" | jq -r .tag_name | sed 's/v//')" 
+deb_sources+=('https://github.com/sharkdp/fd/releases/latest/download/fd_'$fdversion'_amd64.deb')
+
+
+# https://github.com/sharkdp/pastel
+deb_installed+=(pastel)
+pastelversion="$(curl -s "https://api.github.com/repos/sharkdp/pastel/releases/latest" | jq -r .tag_name | sed 's/v//')" 
+deb_sources+=('https://github.com/sharkdp/pastel/releases/latest/download/pastel_'$pastelversion'_amd64.deb')
+
+# https://github.com/sharkdp/vivid
+deb_installed+=(vivid)
+vividversion="$(curl -s "https://api.github.com/repos/sharkdp/vivid/releases/latest" | jq -r .tag_name | sed 's/v//')" 
+deb_sources+=('https://github.com/sharkdp/vivid/releases/latest/download/vivid_'$vividversion'_amd64.deb')
+
+# https://github.com/BurntSushi/ripgrep
+deb_installed+=(ripgrep)
+rgversion="$(curl -s "https://api.github.com/repos/BurntSushi/ripgrep/releases/latest" | jq -r .tag_name)"
+deb_sources+=('https://github.com/BurntSushi/ripgrep/releases/download/'$rgversion'/ripgrep_'$rgversion'_amd64.deb')
+
+# https://github.com/dandavison/delta
+deb_installed+=(delta)
+deltaversion="$(curl -s "https://api.github.com/repos/dandavison/delta/releases/latest" | jq -r .tag_name)"
+deb_sources+=('https://github.com/dandavison/delta/releases/download/'$deltaversion'/git-delta_'$deltaversion'_amd64.deb')
 
 
 ####################
@@ -171,6 +190,18 @@ function setdiff() {
   done
   [[ "$1" ]] && echo "${setdiff_out[@]}"
 }
+
+function contains() {
+    local seeking=$1
+    shift
+    local array=$@
+    for v in ${array[@]}; do
+        if [ "$v" == "$seeking" ]; then
+            return 0;
+        fi
+    done
+   return 1;
+}
 ###############################################################################
 #                                                                     #
 ###############################################################################
@@ -202,12 +233,13 @@ sudo apt-get -qq update
 
 # Upgrade APT.
 e_header "Upgrading APT"
-sudo apt-get -qq -y upgrade
+sudo apt-get -qq -y upgrade > /dev/null 2>&1
 
 
 # Install APT packages.
 installed_apt_packages="$(dpkg --get-selections | grep -v deinstall | awk 'BEGIN{FS="[\t:]"}{print $1}' | uniq)"
 apt_packages=($(setdiff "${apt_packages[*]}" "$installed_apt_packages"))
+
 
 if (( ${#apt_packages[@]} > 0 )); then
   e_header "Installing APT packages (${#apt_packages[@]})"
@@ -221,12 +253,16 @@ fi
 
 # Install debs via dpkg
 function __temp() { [[ ! -e "$1" ]]; }
+deb_installed_filter=($(setdiff "${deb_installed[*]}" "$installed_apt_packages"))
 deb_installed_i=($(array_filter_i deb_installed __temp))
 
 if (( ${#deb_installed_i[@]} > 0 )); then
   mkdir -p "$installers_path"
-  e_header "Installing debs (${#deb_installed_i[@]})"
+  e_header "Installing debs (${#deb_installed_filter[@]})"
   for i in "${deb_installed_i[@]}"; do
+    if ! contains ${deb_installed[i]} ${deb_installed_filter[@]}; then
+      continue
+    fi
     e_arrow "${deb_installed[i]}"
     deb="${deb_sources[i]}"
     [[ "$(type -t "$deb")" == function ]] && deb="$($deb)"

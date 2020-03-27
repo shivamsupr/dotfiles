@@ -8,9 +8,14 @@ set autoindent                             " Indent according to previous line.
 set noerrorbells visualbell t_vb= 	       "No bells!
 set tm=500
 nnoremap <C-x> :q!<cr>
-if (has("termguicolors"))
+
+" Enable true color
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
+
 " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
 filetype plugin indent on
 
@@ -22,6 +27,8 @@ set shiftwidth=2
 
 "----------Visuals------"
 set t_Co=256
+set foldmethod=syntax  " Foldmethod 
+set nofoldenable
 set number                                 "Let's activate line number
 set wrap " turn on line wrapping
 colorscheme iceberg
@@ -60,6 +67,7 @@ augroup autoRead
     autocmd!
     autocmd CursorHold * silent! checktime
 augroup END
+
 "----------Tabs------"
 " CTRL-Tab is next tab
 "nnoremap <C-S-tab> :tabprevious<CR>
@@ -72,9 +80,9 @@ augroup END
 "nmap <C-w> :tabclose<CR>
 
 "----------Buffer------"
-" Switch between opened files in buffer with ctrl-j and crtl-k
-" nnoremap <C-j> :bprev<CR>
-" nnoremap <C-k> :bnext<CR>
+" Switch between buffer
+nnoremap [b :bprev<CR>
+nnoremap ]b :bnext<CR>
 
 "----------Searching------"
 set ignorecase                            " If search string contains only lowercase letters search is case insensitive.
@@ -100,8 +108,8 @@ nmap <C-k> <C-W><C-K> " Move to top window
 nmap <C-h> <C-W><C-H> " Move to left window
 nmap <C-l> <C-W><C-L> " Move to right window
 
-nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+nnoremap <silent> + :exe "vertical resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> - :exe "vertical resize " . (winheight(0) * 2/3)<CR>
 
 "Make ctrl+s work
 nmap <c-s> :w<cr>
@@ -112,3 +120,16 @@ imap <c-s> <esc>:w<cr>a
 " keep visual selection when indenting/outdenting
 vmap < <gv
 vmap > >gv
+
+" Movement in insert mode
+inoremap <C-h> <C-o>h
+inoremap <C-l> <C-o>a
+inoremap <C-j> <C-o>j
+inoremap <C-k> <C-o>k
+
+" Moving lines
+xnoremap <silent> <C-j> :move'>+<cr>gv
+xnoremap <silent> <C-k> :move-2<cr>gv
+
+" Open file in sublime
+command! Subl :call system('nohup "subl" '.expand('%:p').'> /dev/null 2>&1 < /dev/null &')<cr>

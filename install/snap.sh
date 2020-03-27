@@ -9,6 +9,7 @@ packages=(
 cpackages=(
     code
     sublime-text
+    sublime-merge
 )
 
 sudo snap install "${packages[@]}"
@@ -19,3 +20,4 @@ do
   sudo snap install "${package}" --classic
 done
 
+sudo snap install nvim --beta --classic
