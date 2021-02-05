@@ -128,18 +128,11 @@ DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 
 
 dir=~/dotfiles                        # dotfiles directory
-dir_backup=~/dotfiles_old             # old dotfiles backup directory
-
 
 # Get current dir (so run this script from anywhere)
 
 export DOTFILES_DIR
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# Create dotfiles_old in homedir
-echo -n "Creating $dir_backup for backup of any existing dotfiles in ~..."
-mkdir -p $dir_backup
-echo "done"
 
 # Change to the dotfiles directory
 echo -n "Changing to the $dir directory..."
@@ -163,14 +156,6 @@ declare -a FILES_TO_SYMLINK=(
   'shell/tmux'
 )
 
-
-# FILES_TO_SYMLINK="$FILES_TO_SYMLINK .vim bin" # add in vim and the binaries
-# Move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks from the homedir to any files in the ~/dotfiles directory specified in $files
-
-for i in ${FILES_TO_SYMLINK[@]}; do
-  echo "Moving any existing dotfiles from ~ to $dir_backup"
-  mv ~/.${i##*/} ~/dotfiles_old/
-done
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -259,46 +244,56 @@ install_zsh () {
   fi
 }
 
+setup_linux () {
+  ###############################################################################
+  # Linux                                                      #
+  ###############################################################################
+  #ln -s ~/dotfiles/linux/mimeapps.list $HOME/.local/share/applications
+
+  if [ ! -d ~/.local/share/fonts ]; then
+    mkdir $HOME/.local/share/fonts
+  fi
+
+  if [ ! -d ~/.local/share/fonts/FiraCode ]; then
+    echo "Installing Fonts"
+    cd /tmp
+    wget -q --show-progress https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip
+    unzip FiraCode.zip -d ~/.local/share/fonts/FiraCode
+  fi
+
+  ###############################################################################
+  # Caps to Esc                                                                 #
+  ###############################################################################
+  setxkbmap -option caps:escape
+}
+
+setup_mac () {
+  brew install zsh
+  brew tap homebrew/cask-fonts
+  brew install --cask font-fira-code
+}
+
+
+
+setup () {
+  if [ ! -d ~/.fzf ]; then
+    print_info "Installing fzf"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all
+  fi
+  platform=$(uname);
+  if [[ $platform == 'Linux' ]]; then
+    setup_linux
+  elif [[ $platform == 'Darwin' ]]; then
+    setup_mac
+  fi
+}
+
+
 main
 install_zsh
-
-###############################################################################
-# Linux                                                      #
-###############################################################################
-#ln -s ~/dotfiles/linux/mimeapps.list $HOME/.local/share/applications
-
-# if [ ! -d ~/.local/share/fonts ]; then
-  # mkdir $HOME/.local/share/fonts
-# fi
-
-# if [ ! -d ~/.local/share/fonts/FiraCode ]; then
-  # echo "Installing Fonts"
-  # cd /tmp
-  # wget -q --show-progress https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip
-  # unzip FiraCode.zip -d ~/.local/share/fonts/FiraCode
-# fi
-
-
-if [ ! -d ~/.fzf ]; then
-  print_info "Installing fzf"
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install
-fi
-
-###############################################################################
-# Vim                                                                         #
-###############################################################################
-$HOME/dotfiles/install/vim.sh
-
-###############################################################################
-# Zsh                                                                         #
-###############################################################################
-
-# Install Zsh settings
-
-###############################################################################
-# Terminal
-###############################################################################
+setup
 
 # Reload zsh settings
 #source ~/.zshrc
+

@@ -8,6 +8,15 @@ set autoindent                             " Indent according to previous line.
 set noerrorbells visualbell t_vb= 	       "No bells!
 set tm=500
 nnoremap <C-x> :q!<cr>
+set complete-=i
+set smarttab
+set nrformats-=octal
+set cc=120
+
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
+endif
 
 " Enable true color
 if exists('+termguicolors')
@@ -39,6 +48,7 @@ set nowritebackup
 set cmdheight=2
 set updatetime=300
 set shortmess+=c
+set wildmenu
 set signcolumn=yes
 nmap <leader>z <Plug>Zoom
 " switch cursor to line when in insert mode, and block when not
@@ -50,9 +60,14 @@ let &t_EI = "\e[1 q" " command mode block
 set number relativenumber
 augroup numbertoggle
   autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+  autocmd BufEnter,FocusGained,InsertLeave * set number relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set number norelativenumber
 augroup END
+
+" Highlight yank area
+if exists('##TextYankPost')
+  autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank('Substitute',300)
+endif
 
 "----------Behaviour------"
 set clipboard+=unnamedplus
@@ -96,8 +111,8 @@ endif
 " clear highlighted search
 noremap <leader>c :set hlsearch! hlsearch?<cr>
 " Find and replace in current file
-nnoremap <Leader>h :let @s='\<'.expand('<cword>').'\>'<CR>:%s/<C-r>s//<Left>
-xnoremap <Leader>h "sy:%s/<C-r>s//<Left>
+nnoremap <leader>h :let @s=expand('<cword>')<CR>:%s/\<<C-r>s\>/<C-r>s/<Left>
+xnoremap <leader>h "sy:%s/<C-r>s//<Left>
 
 "----------Split Mapping------"
 set splitbelow
@@ -108,8 +123,8 @@ nmap <C-k> <C-W><C-K> " Move to top window
 nmap <C-h> <C-W><C-H> " Move to left window
 nmap <C-l> <C-W><C-L> " Move to right window
 
-nnoremap <silent> + :exe "vertical resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> - :exe "vertical resize " . (winheight(0) * 2/3)<CR>
+nnoremap <silent> + :exe "vertical resize +5"<CR>
+nnoremap <silent> - :exe "vertical resize -5"<CR>
 
 "Make ctrl+s work
 nmap <c-s> :w<cr>

@@ -1,6 +1,18 @@
 let g:fzf_layout = { 'up': '~40%' }
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 function s:fzf_buf_in() abort
   echo
   set laststatus=0
@@ -88,7 +100,7 @@ map <leader>p :RG<CR>
 
 " Advanced Rg integration to restart search if query changes
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --hidden --smart-case %s || true'
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --hidden --smart-case --fixed-strings %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}

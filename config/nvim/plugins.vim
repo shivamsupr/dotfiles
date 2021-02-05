@@ -3,13 +3,12 @@ call plug#begin('~/.config/nvim/plugged')
 
 " colorscheme
 Plug 'cocopon/iceberg.vim'
-Plug 'arcticicestudio/nord-vim'
 Plug 'logico/typewriter-vim'
-Plug 'sainnhe/edge'
 
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-peekaboo'
+Plug 'junegunn/vim-easy-align'
 
 " File search
 Plug '~/.fzf/'
@@ -20,11 +19,23 @@ Plug 'tpope/vim-repeat'
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'metakirby5/codi.vim'
-Plug 'wellle/targets.vim'
+" Plug 'wellle/targets.vim'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 " autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neovim/nvim-lspconfig'
 Plug 'mattn/emmet-vim'
+Plug 'liuchengxu/vista.vim'
+
+" telescope
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
+
+" debugger
+" Plug 'puremourning/vimspector'
 
 " Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
@@ -52,14 +63,20 @@ Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
 Plug 'norcalli/nvim-colorizer.lua' " show hex/rgb colors in bg
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'ianks/vim-tsx', { 'for': 'typescript' }
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+Plug 'rescript-lang/vim-rescript'
+Plug 'reasonml-editor/vim-reason-plus'
 Plug 'editorconfig/editorconfig-vim'
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
 
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 
 
+Plug 'tpope/vim-dadbod'
+
+Plug 'janko/vim-test'
 
 Plug 'wakatime/vim-wakatime'
 call plug#end()
